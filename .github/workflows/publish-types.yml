@@ -33,8 +33,8 @@ jobs:
 
       - name: Configure Github Actions user
         run: |
-          git config user.name "${GITHUB_ACTOR}"
-          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git config user.name "${{ vars.RELEASE_IT_NAME }}"
+          git config user.email "${{ vars.RELEASE_IT_EMAIL }}"
 
       - name: Initialize the NPM config
         run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
