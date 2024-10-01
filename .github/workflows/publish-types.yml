@@ -12,6 +12,9 @@ on:
       - 'types/src/**'
       - 'types/package.json'
 
+permissions:
+  contents: read # for checkout
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,11 +22,13 @@ jobs:
     permissions:
       packages: write
       contents: write
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          persist-credentials: false # <--- this
 
       - uses: actions/setup-node@v3
         with:
