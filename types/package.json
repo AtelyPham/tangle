@@ -1,10 +1,13 @@
 {
   "name": "@atelypham/tangle-substrate-types",
-  "version": "0.5.14",
+  "version": "0.5.15",
   "description": "Polkadot.js type definitions required for interacting with Webb's tangle network",
   "author": "Webb Developers <drew@webb.tools>",
   "license": "Apache-2.0",
-  "repository": "https://github.com/webb-tools/tangle.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webb-tools/tangle.git"
+  },
   "homepage": "https://github.com/webb-tools/tangle",
   "files": [
     "build"
