@@ -36,7 +36,7 @@
     "build:interfaces:defs": "tsx node_modules/.bin/polkadot-types-from-defs --input ./src/interfaces --package @atelypham/tangle-substrate-types --endpoint ws://127.0.0.1:9944",
     "build:interfaces:chain": "tsx node_modules/.bin/polkadot-types-from-chain --output ./src/interfaces --package @atelypham/tangle-substrate-types --endpoint ws://127.0.0.1:9944",
     "clean": "rm -rf build",
-    "publish-types": "read -p 'GITHUB_TOKEN: ' GITHUB_TOKEN && export GITHUB_TOKEN=$GITHUB_TOKEN && read -p 'NPM_TOKEN: ' NPM_TOKEN && export NPM_TOKEN=$NPM_TOKEN && release-it",
+    "publish-types": "release-it patch",
     "update:metadata": "tsx ./scripts/updateMetadata.ts"
   },
   "dependencies": {
