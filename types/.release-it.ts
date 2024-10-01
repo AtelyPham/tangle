@@ -8,6 +8,7 @@ export default {
     commitMessage: 'Release `tangle-substrate-types` v${version}',
     tagName: '${npm.name}/v${version}',
     tagAnnotation: 'Release ${npm.name} v${version}',
+    pushRepo: 'git@github.com:AtelyPham/tangle.git',
   },
   github: {
     release: true,

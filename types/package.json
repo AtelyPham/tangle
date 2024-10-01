@@ -1,5 +1,5 @@
 {
-  "name": "@webb-tools/tangle-substrate-types",
+  "name": "@atelypham/tangle-substrate-types",
   "version": "0.5.13",
   "description": "Polkadot.js type definitions required for interacting with Webb's tangle network",
   "author": "Webb Developers <drew@webb.tools>",
@@ -30,8 +30,8 @@
   "scripts": {
     "build": "bunchee",
     "build:interfaces": "yarn build:interfaces:defs && yarn build:interfaces:chain",
-    "build:interfaces:defs": "tsx node_modules/.bin/polkadot-types-from-defs --input ./src/interfaces --package @webb-tools/tangle-substrate-types --endpoint ws://127.0.0.1:9944",
-    "build:interfaces:chain": "tsx node_modules/.bin/polkadot-types-from-chain --output ./src/interfaces --package @webb-tools/tangle-substrate-types --endpoint ws://127.0.0.1:9944",
+    "build:interfaces:defs": "tsx node_modules/.bin/polkadot-types-from-defs --input ./src/interfaces --package @atelypham/tangle-substrate-types --endpoint ws://127.0.0.1:9944",
+    "build:interfaces:chain": "tsx node_modules/.bin/polkadot-types-from-chain --output ./src/interfaces --package @atelypham/tangle-substrate-types --endpoint ws://127.0.0.1:9944",
     "clean": "rm -rf build",
     "publish-types": "release-it patch",
     "update:metadata": "tsx ./scripts/updateMetadata.ts"
