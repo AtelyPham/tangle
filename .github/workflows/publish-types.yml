@@ -48,4 +48,7 @@ jobs:
         run: cd types && yarn publish-types --ci
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Using Github auto-generated token
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Using personal access token
+          GITHUB_TOKEN: ${{ secrets.RELEASE_IT_GITHUB_TOKEN }}
