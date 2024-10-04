@@ -12,9 +12,6 @@ on:
       - 'types/src/**'
       - 'types/package.json'
 
-permissions:
-  contents: read # for checkout
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,7 +25,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false # <--- this
 
       - uses: actions/setup-node@v3
         with:
@@ -40,8 +36,8 @@ jobs:
 
       - name: Configure Github Actions user
         run: |
-          git config user.name "${{ vars.RELEASE_IT_NAME }}"
-          git config user.email "${{ vars.RELEASE_IT_EMAIL }}"
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
       - name: Initialize the NPM config
         run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
@@ -52,4 +48,4 @@ jobs:
         run: cd types && yarn publish-types --ci
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.RELEASE_IT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
