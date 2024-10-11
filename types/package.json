@@ -1,6 +1,6 @@
 {
   "name": "@atelypham/tangle-substrate-types",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Polkadot.js type definitions required for interacting with Webb's tangle network",
   "author": "Webb Developers <drew@webb.tools>",
   "license": "Apache-2.0",
@@ -36,7 +36,7 @@
     "build:interfaces:defs": "tsx node_modules/.bin/polkadot-types-from-defs --input ./src/interfaces --package @atelypham/tangle-substrate-types --endpoint ws://127.0.0.1:9944",
     "build:interfaces:chain": "tsx node_modules/.bin/polkadot-types-from-chain --output ./src/interfaces --package @atelypham/tangle-substrate-types --endpoint ws://127.0.0.1:9944",
     "clean": "rm -rf build",
-    "publish-types": "release-it patch",
+    "publish-types": "npx release-it patch",
     "update:metadata": "tsx ./scripts/updateMetadata.ts"
   },
   "dependencies": {
