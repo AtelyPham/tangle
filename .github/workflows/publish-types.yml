@@ -40,6 +40,8 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - run: ssh -vT git@github.com
+
       - name: Install npm dependencies
         run: |
           cd types
