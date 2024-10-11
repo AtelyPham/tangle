@@ -56,8 +56,4 @@ jobs:
           yarn publish-types --ci
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          # Using Github auto-generated token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Using personal access token
-          # RELEASE_IT_GITHUB_TOKEN: ${{ secrets.RELEASE_IT_GITHUB_TOKEN }}

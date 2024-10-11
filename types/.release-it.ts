@@ -13,7 +13,9 @@ export default {
   github: {
     release: true,
     releaseName: 'Release ${npm.name} v${version}',
-    tokenRef: 'RELEASE_IT_GITHUB_TOKEN',
+    releaseNotes(context) {
+      return `Release ${context.npm.name} version ${context.version}`
+    },
   },
   npm: {
     publish: true,

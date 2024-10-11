@@ -79,7 +79,7 @@ const ECPair: ECPairAPI = ECPairFactory(tinysecp)
             },
           },
         ],
-        amount: '10000000000000000000',
+        amount: '100000000000000000000',
       },
     },
     10
