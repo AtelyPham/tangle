@@ -97,6 +97,7 @@ pallet-services-rpc-runtime-api = { workspace = true }
 tangle-primitives = { workspace = true, features = ["verifying"] }
 tangle-crypto-primitives = { workspace = true }
 pallet-multi-asset-delegation = { workspace = true }
+pallet-tangle-lst-benchmarking = { optional = true, workspace = true }
 
 # Frontier dependencies
 fp-evm = { workspace = true }
@@ -167,6 +168,7 @@ runtime-benchmarks = [
     "pallet-balances/runtime-benchmarks",
     "pallet-assets/runtime-benchmarks",
     "pallet-vesting/runtime-benchmarks",
+    "pallet-staking/runtime-benchmarks",
     "pallet-collective/runtime-benchmarks",
     "pallet-timestamp/runtime-benchmarks",
     "pallet-tx-pause/runtime-benchmarks",
@@ -183,6 +185,7 @@ runtime-benchmarks = [
 
     "xcm-builder/runtime-benchmarks",
     "pallet-multi-asset-delegation/runtime-benchmarks",
+    "pallet-tangle-lst-benchmarking/runtime-benchmarks",
 ]
 default = ["std", "with-rocksdb-weights", "evm-tracing"]
 local-testing = []

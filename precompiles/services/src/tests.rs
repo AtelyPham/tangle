@@ -20,11 +20,13 @@ use tangle_primitives::services::PriceTargets;
 use tangle_primitives::services::ServiceMetadata;
 use tangle_primitives::services::ServiceRegistrationHook;
 use tangle_primitives::services::ServiceRequestHook;
-use tangle_primitives::services::{ApprovalPrefrence, OperatorPreferences, ServiceBlueprint};
+use tangle_primitives::services::{ApprovalPreference, OperatorPreferences, ServiceBlueprint};
 
 fn zero_key() -> ecdsa::Public {
 	ecdsa::Public::from([0; 33])
 }
+
+const WETH: AssetId = 1;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -121,7 +123,7 @@ fn test_register_operator() {
 		// Now register operator
 		let preferences_data = OperatorPreferences {
 			key: zero_key(),
-			approval: ApprovalPrefrence::default(),
+			approval: ApprovalPreference::default(),
 			price_targets: price_targets(MachineKind::Large),
 		}
 		.encode();
@@ -163,7 +165,7 @@ fn test_request_service() {
 		// Now register operator
 		let preferences_data = OperatorPreferences {
 			key: zero_key(),
-			approval: ApprovalPrefrence::default(),
+			approval: ApprovalPreference::default(),
 			price_targets: price_targets(MachineKind::Large),
 		}
 		.encode();
@@ -194,6 +196,7 @@ fn test_request_service() {
 					permitted_callers_data: UnboundedBytes::from(permitted_callers_data.encode()),
 					service_providers_data: UnboundedBytes::from(service_providers_data.encode()),
 					request_args_data: UnboundedBytes::from(request_args_data),
+					assets: [WETH].into_iter().map(Into::into).collect(),
 				},
 			)
 			.execute_returns(());
@@ -221,7 +224,7 @@ fn test_unregister_operator() {
 
 		let preferences_data = OperatorPreferences {
 			key: zero_key(),
-			approval: ApprovalPrefrence::default(),
+			approval: ApprovalPreference::default(),
 			price_targets: price_targets(MachineKind::Large),
 		}
 		.encode();
@@ -271,7 +274,7 @@ fn test_terminate_service() {
 
 		let preferences_data = OperatorPreferences {
 			key: zero_key(),
-			approval: ApprovalPrefrence::default(),
+			approval: ApprovalPreference::default(),
 			price_targets: price_targets(MachineKind::Large),
 		}
 		.encode();
@@ -301,6 +304,7 @@ fn test_terminate_service() {
 					permitted_callers_data: UnboundedBytes::from(permitted_callers_data.encode()),
 					service_providers_data: UnboundedBytes::from(service_providers_data.encode()),
 					request_args_data: UnboundedBytes::from(request_args_data),
+					assets: [WETH].into_iter().map(Into::into).collect(),
 				},
 			)
 			.execute_returns(());

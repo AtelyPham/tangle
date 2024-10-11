@@ -28,6 +28,9 @@ const CHARLIE: u8 = 3;
 const DAVE: u8 = 4;
 const EVE: u8 = 5;
 
+const USDC: AssetId = 1;
+const WETH: AssetId = 2;
+
 fn zero_key() -> ecdsa::Public {
 	ecdsa::Public::try_from([0; 33].as_slice()).unwrap()
 }
@@ -123,7 +126,7 @@ fn register_on_blueprint() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: price_targets(MachineKind::Large),
 			},
 			Default::default(),
@@ -135,7 +138,7 @@ fn register_on_blueprint() {
 			blueprint_id: 0,
 			preferences: OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: price_targets(MachineKind::Large),
 			},
 			registration_args: Default::default(),
@@ -152,7 +155,7 @@ fn register_on_blueprint() {
 				0,
 				OperatorPreferences {
 					key: zero_key(),
-					approval: ApprovalPrefrence::default(),
+					approval: ApprovalPreference::default(),
 					price_targets: Default::default()
 				},
 				Default::default(),
@@ -167,7 +170,7 @@ fn register_on_blueprint() {
 				0,
 				OperatorPreferences {
 					key: zero_key(),
-					approval: ApprovalPrefrence::default(),
+					approval: ApprovalPreference::default(),
 					price_targets: Default::default()
 				},
 				Default::default(),
@@ -216,7 +219,7 @@ fn update_approval_preference() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: price_targets(MachineKind::Small)
 			},
 			Default::default(),
@@ -226,7 +229,7 @@ fn update_approval_preference() {
 			Operators::<Runtime>::get(0, &bob).unwrap(),
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: price_targets(MachineKind::Small)
 			}
 		);
@@ -236,7 +239,7 @@ fn update_approval_preference() {
 			blueprint_id: 0,
 			preferences: OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: price_targets(MachineKind::Small),
 			},
 			registration_args: Default::default(),
@@ -246,18 +249,18 @@ fn update_approval_preference() {
 		assert_ok!(Services::update_approval_preference(
 			RuntimeOrigin::signed(bob.clone()),
 			0,
-			ApprovalPrefrence::Required,
+			ApprovalPreference::Required,
 		));
 
 		assert_eq!(
 			Operators::<Runtime>::get(0, &bob).unwrap().approval,
-			ApprovalPrefrence::Required
+			ApprovalPreference::Required
 		);
 
 		assert_events(vec![RuntimeEvent::Services(crate::Event::ApprovalPreferenceUpdated {
 			operator: bob,
 			blueprint_id: 0,
-			approval_preference: ApprovalPrefrence::Required,
+			approval_preference: ApprovalPreference::Required,
 		})]);
 
 		// try to update approval preference when not registered
@@ -266,7 +269,7 @@ fn update_approval_preference() {
 			Services::update_approval_preference(
 				RuntimeOrigin::signed(charlie),
 				0,
-				ApprovalPrefrence::Required
+				ApprovalPreference::Required
 			),
 			crate::Error::<Runtime>::NotRegistered
 		);
@@ -290,7 +293,7 @@ fn update_price_targets() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: price_targets(MachineKind::Small)
 			},
 			Default::default(),
@@ -300,7 +303,7 @@ fn update_price_targets() {
 			Operators::<Runtime>::get(0, &bob).unwrap(),
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: price_targets(MachineKind::Small)
 			}
 		);
@@ -310,7 +313,7 @@ fn update_price_targets() {
 			blueprint_id: 0,
 			preferences: OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: price_targets(MachineKind::Small),
 			},
 			registration_args: Default::default(),
@@ -361,7 +364,7 @@ fn unregister_from_blueprint() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -400,7 +403,7 @@ fn request_service() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -411,7 +414,7 @@ fn request_service() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -422,7 +425,7 @@ fn request_service() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -434,8 +437,9 @@ fn request_service() {
 			0,
 			vec![alice.clone()],
 			vec![bob.clone(), charlie.clone(), dave.clone()],
-			100,
 			Default::default(),
+			vec![USDC, WETH],
+			100,
 		));
 		// this service gets immediately accepted by all providers.
 		assert_eq!(ServiceRequests::<Runtime>::iter_keys().collect::<Vec<_>>().len(), 0);
@@ -453,6 +457,7 @@ fn request_service() {
 			request_id: None,
 			service_id: 0,
 			blueprint_id: 0,
+			assets: vec![USDC, WETH],
 		})]);
 	});
 }
@@ -471,7 +476,7 @@ fn request_service_with_approval_process() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -483,7 +488,7 @@ fn request_service_with_approval_process() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::Required,
+				approval: ApprovalPreference::Required,
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -495,7 +500,7 @@ fn request_service_with_approval_process() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::Required,
+				approval: ApprovalPreference::Required,
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -507,8 +512,9 @@ fn request_service_with_approval_process() {
 			0,
 			vec![alice.clone()],
 			vec![bob.clone(), charlie.clone(), dave.clone()],
-			100,
 			Default::default(),
+			vec![WETH],
+			100,
 		));
 
 		// the service should be pending approval from charlie and dave.
@@ -519,6 +525,7 @@ fn request_service_with_approval_process() {
 			blueprint_id: 0,
 			approved: vec![bob.clone()],
 			pending_approvals: vec![charlie.clone(), dave.clone()],
+			assets: vec![WETH],
 		})]);
 
 		// it should not be added, until all providers approve.
@@ -564,8 +571,43 @@ fn request_service_with_approval_process() {
 				request_id: Some(0),
 				service_id: 0,
 				blueprint_id: 0,
+				assets: vec![WETH],
 			}),
 		]);
+	});
+}
+
+#[test]
+fn request_service_with_no_assets() {
+	new_test_ext(vec![ALICE, BOB, CHARLIE, DAVE, EVE]).execute_with(|| {
+		System::set_block_number(1);
+		let alice = mock_pub_key(ALICE);
+		let blueprint = cggmp21_blueprint();
+		assert_ok!(Services::create_blueprint(RuntimeOrigin::signed(alice.clone()), blueprint));
+		let bob = mock_pub_key(BOB);
+		assert_ok!(Services::register(
+			RuntimeOrigin::signed(bob.clone()),
+			0,
+			OperatorPreferences {
+				key: zero_key(),
+				approval: ApprovalPreference::default(),
+				price_targets: Default::default()
+			},
+			Default::default(),
+		));
+		let eve = mock_pub_key(EVE);
+		assert_err!(
+			Services::request(
+				RuntimeOrigin::signed(eve.clone()),
+				0,
+				vec![alice.clone()],
+				vec![bob.clone()],
+				Default::default(),
+				vec![], // no assets
+				100,
+			),
+			Error::<Runtime>::NoAssetsProvided
+		);
 	});
 }
 
@@ -582,7 +624,7 @@ fn job_calls() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -593,7 +635,7 @@ fn job_calls() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -604,7 +646,7 @@ fn job_calls() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -616,8 +658,9 @@ fn job_calls() {
 			0,
 			vec![alice.clone()],
 			vec![bob.clone(), charlie.clone(), dave.clone()],
-			100,
 			Default::default(),
+			vec![WETH],
+			100,
 		));
 		// this service gets immediately accepted by all providers.
 		assert_eq!(ServiceRequests::<Runtime>::iter_keys().collect::<Vec<_>>().len(), 0);
@@ -627,6 +670,7 @@ fn job_calls() {
 			request_id: None,
 			service_id: 0,
 			blueprint_id: 0,
+			assets: vec![WETH],
 		})]);
 
 		// now we can call the jobs
@@ -662,7 +706,7 @@ fn job_calls_fails_with_invalid_input() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -673,7 +717,7 @@ fn job_calls_fails_with_invalid_input() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -684,7 +728,7 @@ fn job_calls_fails_with_invalid_input() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -696,8 +740,9 @@ fn job_calls_fails_with_invalid_input() {
 			0,
 			vec![alice.clone()],
 			vec![bob.clone(), charlie.clone(), dave.clone()],
-			100,
 			Default::default(),
+			vec![WETH],
+			100,
 		));
 		// this service gets immediately accepted by all providers.
 		assert_eq!(ServiceRequests::<Runtime>::iter_keys().collect::<Vec<_>>().len(), 0);
@@ -707,6 +752,7 @@ fn job_calls_fails_with_invalid_input() {
 			request_id: None,
 			service_id: 0,
 			blueprint_id: 0,
+			assets: vec![WETH],
 		})]);
 
 		// now we can call the jobs
@@ -739,7 +785,7 @@ fn job_result() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -750,7 +796,7 @@ fn job_result() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -761,7 +807,7 @@ fn job_result() {
 			0,
 			OperatorPreferences {
 				key: zero_key(),
-				approval: ApprovalPrefrence::default(),
+				approval: ApprovalPreference::default(),
 				price_targets: Default::default()
 			},
 			Default::default(),
@@ -773,8 +819,9 @@ fn job_result() {
 			0,
 			vec![alice.clone()],
 			vec![bob.clone(), charlie.clone(), dave.clone()],
-			100,
 			Default::default(),
+			vec![WETH],
+			100,
 		));
 		// this service gets immediately accepted by all providers.
 		assert_eq!(ServiceRequests::<Runtime>::iter_keys().collect::<Vec<_>>().len(), 0);
@@ -784,6 +831,7 @@ fn job_result() {
 			request_id: None,
 			service_id: 0,
 			blueprint_id: 0,
+			assets: vec![WETH],
 		})]);
 
 		// now we can call the jobs
