@@ -17,8 +17,33 @@ permissions:
   id-token: write
 
 jobs:
+  setup-ssh:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Configure git in case we need to bump our app versions
+      - name: Configure git
+        uses: oleksiyrudenko/gha-git-credentials@v2.1.2
+        with:
+          global: true
+          token: '${{ secrets.GITHUB_TOKEN }}'
+
+      # Change git remote to be SSH so that release-it can get around PR requirement
+      - name: Change git remote to use SSH
+        run: |
+          git remote set-url origin git@github.com:AtelyPham/tangle.git
+
+      # Configure SSH with hlp-ci-bot's private SSH key
+      - name: Attach SSH key
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
+
   build:
     runs-on: ubuntu-latest
+
+    needs:
+      - setup-ssh
 
     steps:
       - uses: actions/checkout@v4
