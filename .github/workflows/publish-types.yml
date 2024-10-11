@@ -30,19 +30,7 @@ jobs:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
 
-      # Configure git in case we need to bump our app versions
-      - name: Configure git
-        uses: oleksiyrudenko/gha-git-credentials@v2.1.2
-        with:
-          global: true
-          token: '${{ secrets.GITHUB_TOKEN }}'
-
-      # Change git remote to be SSH so that release-it can get around PR requirement
-      - name: Change git remote to use SSH
-        run: |
-          git remote set-url origin git@github.com:AtelyPham/tangle.git
-
-      # Configure SSH with hlp-ci-bot's private SSH key
+      # Configure SSH with private SSH key
       - name: Attach SSH key
         uses: webfactory/ssh-agent@v0.5.4
         with:
@@ -57,8 +45,6 @@ jobs:
         run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - run: ssh -vT git@github.com
 
       - name: Install npm dependencies
         run: |
